@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% block title %}Portal de Notícias{% endblock %}</title>
+<style>
+    :root {
+        --cor-primaria: #5c1a1a;
+        --cor-acento: #c9a227;
+        --cor-fundo: #faf7f2;
+        --cor-texto: #2b2320;
+    }
+    * { box-sizing: border-box; }
+    body {
+        margin: 0;
+        font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+        background: var(--cor-fundo);
+        color: var(--cor-texto);
+        line-height: 1.55;
+    }
+    header {
+        background: var(--cor-primaria);
+        color: #fff;
+        padding: 1.1rem 1.5rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+    header a { color: #fff; text-decoration: none; }
+    header .marca { font-weight: 700; font-size: 1.2rem; }
+    nav a { margin-left: 1rem; font-size: 0.92rem; opacity: 0.9; }
+    nav a:hover { opacity: 1; text-decoration: underline; }
+    main { max-width: 880px; margin: 0 auto; padding: 1.75rem 1.25rem 3rem; }
+    .mensagens { list-style: none; padding: 0; margin: 0 0 1.25rem; }
+    .mensagens li {
+        padding: 0.6rem 0.9rem;
+        border-radius: 6px;
+        margin-bottom: 0.5rem;
+        background: #eee;
+        border-left: 4px solid var(--cor-acento);
+        font-size: 0.92rem;
+    }
+    .mensagens li.error { border-color: #a33; background: #fbeaea; }
+    .mensagens li.success { border-color: #3a7d44; background: #eaf6ec; }
+    .badge {
+        display: inline-block;
+        padding: 0.15rem 0.55rem;
+        border-radius: 999px;
+        font-size: 0.72rem;
+        font-weight: 600;
+        letter-spacing: 0.02em;
+        text-transform: uppercase;
+    }
+    .badge-rascunho { background: #e2e2e2; color: #444; }
+    .badge-em_revisao { background: #fde7c2; color: #7a5200; }
+    .badge-publicado { background: #d9f0dc; color: #1f5f2c; }
+    .badge-rejeitado { background: #f6d6d6; color: #8a1f1f; }
+    .post-card {
+        background: #fff;
+        border: 1px solid #eee0cf;
+        border-radius: 10px;
+        padding: 1.25rem;
+        margin-bottom: 1.1rem;
+    }
+    .post-card h2 { margin: 0.3rem 0; }
+    .post-card h2 a { color: var(--cor-primaria); text-decoration: none; }
+    .post-meta { font-size: 0.85rem; color: #77685a; }
+    .tag {
+        display: inline-block;
+        font-size: 0.78rem;
+        background: #f1e6cf;
+        color: #6b5313;
+        padding: 0.1rem 0.5rem;
+        border-radius: 5px;
+        margin-right: 0.3rem;
+    }
+    .botao {
+        display: inline-block;
+        background: var(--cor-primaria);
+        color: #fff;
+        padding: 0.5rem 1rem;
+        border-radius: 6px;
+        text-decoration: none;
+        font-size: 0.9rem;
+        border: none;
+        cursor: pointer;
+    }
+    .botao.secundario { background: transparent; color: var(--cor-primaria); border: 1px solid var(--cor-primaria); }
+    .botao.perigo { background: #8a1f1f; }
+    form p { margin: 0.6rem 0; }
+    input, textarea, select {
+        width: 100%;
+        padding: 0.5rem;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        font-family: inherit;
+    }
+    .filtros { margin-bottom: 1.25rem; font-size: 0.9rem; }
+    .filtros a { margin-right: 0.6rem; color: var(--cor-primaria); }
+    footer { text-align: center; font-size: 0.8rem; color: #998f80; padding: 1.5rem; }
+</style>
+</head>
+<body>
+<header>
+    <a class="marca" href="{% url 'posts:post_list' %}">Portal de Notícias</a>
+    <nav>
+        <a href="{% url 'posts:post_list' %}">Início</a>
+        <a href="{% url 'posts:post_create' %}">Novo post</a>
+        <a href="/admin/">Administração</a>
+    </nav>
+</header>
+<main>
+    {% if messages %}
+    <ul class="mensagens">
+        {% for message in messages %}
+        <li class="{{ message.tags }}">{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    {% block content %}{% endblock %}
+</main>
+<footer>Portal de Notícias — Projeto P1 (MVP)</footer>
+</body>
+</html>

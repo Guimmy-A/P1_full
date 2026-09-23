@@ -1,0 +1,42 @@
+{% extends "posts/base.html" %}
+{% block title %}Portal de Notícias{% endblock %}
+{% block content %}
+<form method="get" class="filtros">
+    <input type="text" name="q" placeholder="Buscar por título ou resumo..." value="{{ request.GET.q }}" style="width:auto; display:inline-block;">
+    <select name="categoria">
+        <option value="">Todas as categorias</option>
+        {% for categoria in categorias %}
+        <option value="{{ categoria.slug }}" {% if categoria.slug == categoria_atual %}selected{% endif %}>{{ categoria.nome }}</option>
+        {% endfor %}
+    </select>
+    <button class="botao secundario" type="submit">Buscar</button>
+    {% if filtros_ativos %}<a href="{% url 'posts:post_list' %}">(limpar filtros)</a>{% endif %}
+</form>
+
+{% for post in page_obj %}
+<article class="post-card">
+    <span class="badge badge-{{ post.status|lower }}">{{ post.get_status_display }}</span>
+    <h2><a href="{{ post.get_absolute_url }}">{{ post.titulo }}</a></h2>
+    <p class="post-meta">
+        por {{ post.autor.nome }} em {{ post.categoria.nome }} ·
+        {{ post.data_publicacao|default:post.data_criacao|date:"d/m/Y" }}
+    </p>
+    <p>{{ post.resumo|default:post.conteudo|truncatewords:30 }}</p>
+    {% for tag in post.tags.all %}<span class="tag">#{{ tag.nome }}</span>{% endfor %}
+</article>
+{% empty %}
+    {% if filtros_ativos %}
+    <p>Nenhum post encontrado para esses filtros. Tente outro termo de busca ou categoria.</p>
+    {% else %}
+    <p>Nenhum post publicado ainda.</p>
+    {% endif %}
+{% endfor %}
+
+{% if page_obj.has_other_pages %}
+<p>
+    {% if page_obj.has_previous %}<a href="?page={{ page_obj.previous_page_number }}">« Anterior</a>{% endif %}
+    Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}
+    {% if page_obj.has_next %}<a href="?page={{ page_obj.next_page_number }}">Próxima »</a>{% endif %}
+</p>
+{% endif %}
+{% endblock %}

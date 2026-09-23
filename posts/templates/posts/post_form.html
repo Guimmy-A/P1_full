@@ -1,0 +1,11 @@
+{% extends "posts/base.html" %}
+{% block title %}{{ titulo_pagina }}{% endblock %}
+{% block content %}
+<h1>{{ titulo_pagina }}</h1>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button class="botao" type="submit">Salvar</button>
+    {% if post %}<a class="botao secundario" href="{{ post.get_absolute_url }}">Cancelar</a>{% endif %}
+</form>
+{% endblock %}

@@ -1,0 +1,11 @@
+{% extends "posts/base.html" %}
+{% block title %}Excluir post{% endblock %}
+{% block content %}
+<h1>Excluir "{{ post.titulo }}"?</h1>
+<p>Essa ação não pode ser desfeita.</p>
+<form method="post">
+    {% csrf_token %}
+    <button class="botao perigo" type="submit">Sim, excluir</button>
+    <a class="botao secundario" href="{{ post.get_absolute_url }}">Cancelar</a>
+</form>
+{% endblock %}

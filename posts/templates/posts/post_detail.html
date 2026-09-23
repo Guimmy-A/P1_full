@@ -1,0 +1,46 @@
+{% extends "posts/base.html" %}
+{% block title %}{{ post.titulo }}{% endblock %}
+{% block content %}
+<span class="badge badge-{{ post.status|lower }}">{{ post.get_status_display }}</span>
+<h1>{{ post.titulo }}</h1>
+<p class="post-meta">
+    por {{ post.autor.nome }} em {{ post.categoria.nome }}
+    · criado em {{ post.data_criacao|date:"d/m/Y H:i" }}
+    {% if post.data_publicacao %} · publicado em {{ post.data_publicacao|date:"d/m/Y H:i" }}{% endif %}
+</p>
+
+<div>{{ post.conteudo|linebreaks }}</div>
+
+<p>{% for tag in post.tags.all %}<span class="tag">#{{ tag.nome }}</span>{% endfor %}</p>
+
+<p>
+    <a class="botao secundario" href="{% url 'posts:post_update' post.slug %}">Editar</a>
+    <a class="botao perigo" href="{% url 'posts:post_delete' post.slug %}">Excluir</a>
+    {% if post.status == "RASCUNHO" %}
+    <form method="post" action="{% url 'posts:post_enviar_revisao' post.slug %}" style="display:inline;">
+        {% csrf_token %}
+        <button class="botao" type="submit">Enviar para revisão</button>
+    </form>
+    {% endif %}
+</p>
+
+<hr>
+
+<h3>Comentários ({{ comentarios.count }})</h3>
+{% for comentario in comentarios %}
+<div class="post-card">
+    <strong>{{ comentario.nome_autor }}</strong>
+    <span class="post-meta">— {{ comentario.data_criacao|date:"d/m/Y H:i" }}</span>
+    <p>{{ comentario.conteudo }}</p>
+</div>
+{% empty %}
+<p>Nenhum comentário ainda.</p>
+{% endfor %}
+
+<h3>Deixe um comentário</h3>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button class="botao" type="submit">Enviar comentário</button>
+</form>
+{% endblock %}
